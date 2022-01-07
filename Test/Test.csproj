@@ -19,10 +19,4 @@
     <ProjectReference Include="..\RESAS.Services\RESAS.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update=".env">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
