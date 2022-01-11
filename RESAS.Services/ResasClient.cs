@@ -34,7 +34,7 @@ public class ResasClient
     {
         string prefecturesUri = "api/v1/prefectures";
         string url = _BaseUrl + prefecturesUri;
-        string response = await GetHttpResponce(key, url);
+        string response = await GetHttpResponse(key, url);
 
         ApiResult<Prefecture>? result = null;
 
@@ -63,7 +63,7 @@ public class ResasClient
     {
         string industriesUri = "api/v1/industries/broad";
         string url = _BaseUrl + industriesUri;
-        var response = await GetHttpResponce(key, url);
+        var response = await GetHttpResponse(key, url);
 
         ApiResult<IndustriesBroad>? result = null;
 
@@ -101,7 +101,7 @@ public class ResasClient
         return result?.Result ?? new List<T>();
     }
 
-    private static async Task<string> GetHttpResponce(string key, string url)
+    private static async Task<string> GetHttpResponse(string key, string url)
     {
         using (var client = new HttpClient())
         {
