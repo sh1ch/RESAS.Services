@@ -12,13 +12,25 @@ using RESAS.Services.Data;
 
 namespace RESAS.Services;
 
+/// <summary>
+/// <see cref="ResasClient"/> クラスは、RESAS API 用のクライアント接続を提供します。
+/// </summary>
 public class ResasClient
 {
-    private string _BaseUrl = "https://opendata.resas-portal.go.jp/";
+    private const string _BaseUrl = "https://opendata.resas-portal.go.jp/";
 
-    public async Task<IEnumerable<Prefecture>> GetPrefecturesAsync() => await GetPrefecturesAsync(ResasEngine.ApiKey);
+    /// <summary>
+    /// 都道府県コードの URI に API 要求を非同期操作として送信します。(API キーは <see cref="ResasEngine"/> を利用します)
+    /// </summary>
+    /// <returns>都道府県コードのコレクション。取得に失敗した場合、空のコレクションを返却します。</returns>
+    public static async Task<IEnumerable<Prefecture>> GetPrefecturesAsync() => await GetPrefecturesAsync(ResasEngine.ApiKey);
 
-    public async Task<IEnumerable<Prefecture>> GetPrefecturesAsync(string key)
+    /// <summary>
+    /// 都道府県コードの URI に API 要求を非同期操作として送信します。
+    /// </summary>
+    /// <param name="key">API キー。</param>
+    /// <returns>都道府県コードのコレクション。取得に失敗した場合、空のコレクションを返却します。</returns>
+    public static async Task<IEnumerable<Prefecture>> GetPrefecturesAsync(string key)
     {
         string prefecturesUri = "api/v1/prefectures";
         string url = _BaseUrl + prefecturesUri;
@@ -36,27 +48,18 @@ public class ResasClient
         return result?.Result ?? new List<Prefecture>();
     }
 
-    public async Task<IEnumerable<T>> GetLocalAsync<T>(string file)
-    {
-        using var reader = new StreamReader(file);
+    /// <summary>
+    /// 産業大分類コードの URI に API 要求を非同期操作として送信します。(API キーは <see cref="ResasEngine"/> を利用します)
+    /// </summary>
+    /// <returns>産業大分類コードのコレクション。取得に失敗した場合、空のコレクションを返却します。</returns>
+    public static async Task<IEnumerable<IndustriesBroad>> GetIndustriesBroadAsync() => await GetIndustriesBroadAsync(ResasEngine.ApiKey);
 
-        string text = await reader.ReadToEndAsync();
-
-        ApiResult<T>? result = null;
-
-        if (!string.IsNullOrEmpty(text))
-        {
-            var options = new JsonSerializerOptions();
-
-            result = JsonSerializer.Deserialize<ApiResult<T>>(text, options);
-        }
-
-        return result?.Result ?? new List<T>();
-    }
-
-    public async Task<IEnumerable<IndustriesBroad>> GetIndustriesBroadAsync() => await GetIndustriesBroadAsync(ResasEngine.ApiKey);
-
-    public async Task<IEnumerable<IndustriesBroad>> GetIndustriesBroadAsync(string key)
+    /// <summary>
+    /// 産業大分類コードの URI に API 要求を非同期操作として送信します。
+    /// </summary>
+    /// <param name="key">API キー。</param>
+    /// <returns>産業大分類コードのコレクション。取得に失敗した場合、空のコレクションを返却します。</returns>
+    public static async Task<IEnumerable<IndustriesBroad>> GetIndustriesBroadAsync(string key)
     {
         string industriesUri = "api/v1/industries/broad";
         string url = _BaseUrl + industriesUri;
@@ -74,7 +77,31 @@ public class ResasClient
         return result?.Result ?? new List<IndustriesBroad>(); ;
     }
 
-    private async Task<string> GetHttpResponce(string key, string url)
+    /// <summary>
+    /// 指定した RESAS データを表す JSON ファイルを読み込みます。
+    /// </summary>
+    /// <typeparam name="T">読み込む RESAS データの形式。</typeparam>
+    /// <param name="file">ファイルの場所。</param>
+    /// <returns>指定した RESAS データのコレクション。取得に失敗した場合、空のコレクションを返却します。</returns>
+    public static async Task<IEnumerable<T>> GetLocalAsync<T>(string file) where T : IResas
+    {
+        using var reader = new StreamReader(file);
+
+        string text = await reader.ReadToEndAsync();
+
+        ApiResult<T>? result = null;
+
+        if (!string.IsNullOrEmpty(text))
+        {
+            var options = new JsonSerializerOptions();
+
+            result = JsonSerializer.Deserialize<ApiResult<T>>(text, options);
+        }
+
+        return result?.Result ?? new List<T>();
+    }
+
+    private static async Task<string> GetHttpResponce(string key, string url)
     {
         using (var client = new HttpClient())
         {

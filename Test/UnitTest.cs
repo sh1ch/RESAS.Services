@@ -32,10 +32,8 @@ public class Tests
     [Test]
     public async Task RESAS_都道府県コード()
     {
-        var client = new ResasClient();
-
-        var prefectures1 = await client.GetPrefecturesAsync(ApiKey);
-        var prefectures2 = await client.GetPrefecturesAsync();
+        var prefectures1 = await ResasClient.GetPrefecturesAsync(ApiKey);
+        var prefectures2 = await ResasClient.GetPrefecturesAsync();
 
 
         Assert.AreEqual(prefectures1.Count(), 47);
@@ -46,10 +44,8 @@ public class Tests
     [Test]
     public async Task RESAS_産業大分類コード()
     {
-        var client = new ResasClient();
-
-        var industriesBroads1 = await client.GetIndustriesBroadAsync(ApiKey);
-        var industriesBroads2 = await client.GetIndustriesBroadAsync();
+        var industriesBroads1 = await ResasClient.GetIndustriesBroadAsync(ApiKey);
+        var industriesBroads2 = await ResasClient.GetIndustriesBroadAsync();
 
         Assert.AreEqual(industriesBroads1.Count(), 20);
         Assert.AreEqual(industriesBroads2.Count(), 20);
@@ -60,9 +56,7 @@ public class Tests
     [TestCase(@"Memento/IndustriesBroad.json", 20)]
     public async Task RESAS_ローカルファイル(string file, int count)
     {
-        var client = new ResasClient();
-
-        var data = await client.GetLocalAsync<Prefecture>(file);
+        var data = await ResasClient.GetLocalAsync<Prefecture>(file);
 
         Assert.AreEqual(data.Count(), count);
     }
