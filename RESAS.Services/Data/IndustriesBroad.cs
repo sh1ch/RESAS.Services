@@ -23,6 +23,12 @@ public class IndustriesBroad : IResas
     public string Name { get; set; } = "";
 
     /// <summary>
+    /// SIC (Standard Industrial Classification) コードと名称のセットを取得します。
+    /// </summary>
+    [JsonIgnore]
+    public string Text => $"{Code}: {Name}";
+
+    /// <summary>
     /// <see cref="IndustriesBroad"/> クラスの新しいインスタンスを初期化します。
     /// </summary>
     public IndustriesBroad()
